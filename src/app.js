@@ -1,34 +1,23 @@
 // starting point of the application
 
 const express = require("express");
-
+const { adminAuth, userAuth } = require("./middlewares/auth");
 const app = express(); // instance of this express JS application
 
-app.use(
-  "/user",
-  [
-    (req, res, next) => {
-      console.log("user1");
-      next();
-      res.send("Broooooo");
-    },
-    (req, res, next) => {
-      console.log("user 2");
-      // res.send("Response 2");
-      next();
-    },
-  ],
-  (req, res, next) => {
-    console.log("user 3");
-    // res.send("Response 3");
-    next();
-  },
-  (req, res, next) => {
-    console.log("user 4");
-    // res.send("Response 4");
-    next();
-  }
-);
+// authorising the admin routes using middleware
+app.use("/admin", adminAuth);
+
+app.get("/user", userAuth, (req, res, next) => {
+  res.send("user data here");
+});
+
+app.get("/admin/getAllData", (req, res, next) => {
+  res.send("All data of user is here");
+});
+
+app.delete("/admin/deleteAllData", (req, res, next) => {
+  res.send("User data deleted successfully");
+});
 
 const PORT = 3030;
 
