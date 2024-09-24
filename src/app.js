@@ -1,23 +1,41 @@
-// starting point of the application
-
 const express = require("express");
+const { connectDB } = require("./config/database");
+const User = require("./models/user");
 
-const app = express(); // instance of this express JS application
+const app = express();
 
-app.use("/", (req, res) => {
-  res.send("Dashboard");
-});
+app.post("/signup", async (req, res, next) => {
+  const userObject = {
+    firstName: "Virat",
+    lastName: "kohli",
+    age: "34",
+    gender: "Male",
+    email: "virat@gmail.com",
+    password: "1111",
+  };
+  try {
+    // Creating the instance of the User model
 
-app.use("/hello", (req, res) => {
-  res.send("Hello world");
-});
-
-app.use("/test", (req, res) => {
-  // request handler function
-  res.send("hello from the server");
+    const user = new User(userObject);
+    // user.save() will return the promise so we have to use async await
+    await user.save();
+    res.send("user added successfully");
+  } catch (err) {
+    res.status(400).send("Error sending user");
+  }
 });
 
 const PORT = 3030;
-app.listen(PORT, () => {
-  console.log("Server is successfully listening on port", PORT);
-});
+
+connectDB()
+  .then(() => {
+    console.log("Database is connected successfully");
+  })
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("Server sunta hai is port pr", PORT);
+    });
+  })
+  .catch((err) => {
+    console.log("Database connection Failed", err.message);
+  });
