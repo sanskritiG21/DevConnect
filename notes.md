@@ -9,6 +9,7 @@
 
 ### What is schema in database
 
+- Schema defines the structure of a document.
 - before you create the collection you need to create the schema of the database.
 - Schema is the identity for that collection documents.
 - Schema is basically, you are telling what are all the things that you have to store in the specific collection.
@@ -16,6 +17,8 @@
 
 ### Model in datbase
 
+- model is basically a wrapper around a mongo db collection
+- model is a instance of the schema. allowing you to interact with the collection
 - Whenever you are refrencing a model [naming a model] then you Should start the name with capital letters.
 - after creating the schema then we will create the model out of it
 - With this model we will create the new new instances and we will put that into the database
