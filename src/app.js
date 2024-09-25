@@ -17,6 +17,46 @@ app.post("/signup", async (req, res, next) => {
     res.status(400).send("Error sending user");
   }
 });
+app.get("/feed", async (req, res, next) => {
+  try {
+    const users = await User.find({});
+    if (!users.length) {
+      res.status(404).send("No users");
+    } else {
+      res.send(users);
+    }
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+
+app.get("/user", async (req, res, next) => {
+  const userEmail = req.body.email;
+
+  try {
+    const users = await User.find({ email: userEmail });
+    if (!users.length) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(users);
+    }
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
+
+app.get("/firstUser", async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      res.status(404).send("User not found");
+    } else {
+      res.send(user);
+    }
+  } catch (err) {
+    res.status(400).send("Something went wrong");
+  }
+});
 
 const PORT = 3030;
 
