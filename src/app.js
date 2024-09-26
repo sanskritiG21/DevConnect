@@ -1,6 +1,8 @@
 const express = require("express");
 const { connectDB } = require("./config/database");
 const User = require("./models/user");
+const { validateSignUpData } = require("./utils/validation");
+const bcrypt = require("bcrypt");
 
 const app = express();
 
@@ -9,8 +11,15 @@ app.use(express.json());
 // POST api - signup
 app.post("/signup", async (req, res, next) => {
   try {
+    // validate the data
+    validateSignUpData(req);
+
+    // hash the password
+    const { password } = req.body;
+    const hasedPass = await bcrypt.hash(password, 10);
+
     // Creating the instance of the User model
-    const user = new User(req.body);
+    const user = new User({ ...req.body, password: hasedPass });
     // user.save() will return the promise so we have to use async await
     await user.save();
     res.send("user added successfully");

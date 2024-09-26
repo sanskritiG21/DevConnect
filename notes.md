@@ -24,3 +24,11 @@
 - With this model we will create the new new instances and we will put that into the database
 
 - whenever you are doing some db operation, try to wrap it in the try catch block.
+
+### password - encrypted format
+
+1. validation of the api
+2. encrypt the password
+3. then store the data into the database
+
+-- bcrypt is the package used for encrypting the password
