@@ -28,6 +28,27 @@ app.post("/signup", async (req, res, next) => {
   }
 });
 
+app.post("/login", async (req, res, next) => {
+  try {
+    // validate email
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error("Invalid Credentials");
+    } else {
+      const isPasswordMatching = await bcrypt.compare(password, user.password);
+      if (!isPasswordMatching) {
+        throw new Error("Invalid Credentials");
+      } else {
+        res.send("Login successfull");
+      }
+    }
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
 //GET - feed
 app.get("/feed", async (req, res, next) => {
   try {
