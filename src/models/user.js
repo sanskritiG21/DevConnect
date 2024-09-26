@@ -2,6 +2,7 @@
 // What fields 'user' will have
 
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,10 +23,20 @@ const userSchema = new mongoose.Schema(
       unique: true, //this will not let the duplicate entry
       lowercase: true,
       trim: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error(`invalid email address: ${value}`);
+        }
+      },
     },
     password: {
       type: String,
       required: true,
+      validate(value) {
+        if (!validator.isStrongPassword(value)) {
+          throw new Error(`Enter a strong password ${value}`);
+        }
+      },
     },
     age: {
       type: Number,
@@ -41,8 +52,13 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-    photoUrl: {
+    photoURL: {
       type: String,
+      validate(value) {
+        if (!validator.isURL(value)) {
+          throw new Error(`invalid photo URL: ${value}`);
+        }
+      },
     },
     about: {
       type: String,
