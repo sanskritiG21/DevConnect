@@ -3,6 +3,7 @@
 
 const mongoose = require("mongoose");
 const validator = require("validator");
+const { ALLOWED_GENDERS } = require("../config/constants");
 
 const userSchema = new mongoose.Schema(
   {
@@ -45,9 +46,11 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       validate(value) {
+        if (!value) {
+          throw new Error("Please enter a gender");
+        }
         // Custom validate function -- this validate function will only run when you are creating a new object
-        const genders = ["male", "female", "others"];
-        if (!genders.includes(value)) {
+        if (!ALLOWED_GENDERS.includes(value.trim().toLowerCase())) {
           throw new Error("defined gender is not the valid option");
         }
       },

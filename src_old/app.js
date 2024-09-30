@@ -28,7 +28,7 @@ app.post("/signup", async (req, res, next) => {
   }
 });
 
-app.post("/login", async (req, res, next) => {
+app.post("/login", async (req, res) => {
   try {
     // validate email
     const { email, password } = req.body;
@@ -134,7 +134,7 @@ app.patch("/user/:userID", async (req, res, next) => {
       }
     }
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
