@@ -48,12 +48,36 @@ app.post("/login", async (req, res, next) => {
         throw new Error("Invalid Credentials");
       } else {
         // create jwt token
-        var token = jwt.sign({ id: user._id }, "jwtKaPassword123");
+        var token = jwt.sign(
+          { id: user._id },
+          "jwtKaPassword123"
+          // {
+          // expiresIn: "0d",
+          // }
+        );
 
-        res.cookie("token", token);
+        res.cookie(
+          "token",
+          token
+          // Expiring cookie after 3 seconds
+          // {
+          // expires: new Date(Date.now() + 3000),
+          // httpOnly: true,
+          // }
+        );
         res.send("Login successfull");
       }
     }
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+// send connection request
+app.post("/sendconnectionreq", userAuth, (req, res) => {
+  try {
+    const { firstName } = req.user;
+    res.send({ message: `${firstName} sent the connection request` });
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
