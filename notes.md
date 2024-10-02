@@ -32,3 +32,5 @@
 3. then store the data into the database
 
 -- bcrypt is the package used for encrypting the password
+
+## Mongoose schema methods

@@ -42,19 +42,20 @@ app.post("/login", async (req, res, next) => {
     if (!user) {
       throw new Error("Invalid Credentials");
     } else {
-      const isPasswordMatching = await bcrypt.compare(password, user.password);
+      const isPasswordMatching = await user.validatePassword(password);
 
       if (!isPasswordMatching) {
         throw new Error("Invalid Credentials");
       } else {
         // create jwt token
-        var token = jwt.sign(
-          { id: user._id },
-          "jwtKaPassword123"
-          // {
-          // expiresIn: "0d",
-          // }
-        );
+        // var token = jwt.sign(
+        //   { id: user._id },
+        //   "jwtKaPassword123"
+        //   // {
+        //   // expiresIn: "0d",
+        //   // }
+        // );
+        const token = await user.getJWT();
 
         res.cookie(
           "token",
