@@ -3,8 +3,12 @@ const { connectDB } = require("./config/database");
 const User = require("./models/user");
 const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+const { userAuth } = require("./middleware/auth");
 
 const app = express();
+app.use(cookieParser());
 
 app.use(express.json());
 
@@ -34,13 +38,19 @@ app.post("/login", async (req, res, next) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+
     if (!user) {
       throw new Error("Invalid Credentials");
     } else {
       const isPasswordMatching = await bcrypt.compare(password, user.password);
+
       if (!isPasswordMatching) {
         throw new Error("Invalid Credentials");
       } else {
+        // create jwt token
+        var token = jwt.sign({ id: user._id }, "jwtKaPassword123");
+
+        res.cookie("token", token);
         res.send("Login successfull");
       }
     }
@@ -102,6 +112,17 @@ app.delete("/user", async (req, res, next) => {
     } else {
       res.send({ message: "User deleted successfully", data: deletedUser });
     }
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+// profile
+app.get("/profile", userAuth, async (req, res) => {
+  try {
+    const user = req.user;
+    console.log(user);
+    res.send(user);
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
