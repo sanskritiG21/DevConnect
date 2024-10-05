@@ -30,7 +30,7 @@ authRouter.post("/login", async (req, res) => {
     if (!user) {
       throw new Error("Invalid credentials");
     } else {
-      const isPasswordMatching = bcrypt.compare(password, user.password);
+      const isPasswordMatching = await bcrypt.compare(password, user.password);
       if (!isPasswordMatching) {
         throw new Error("Invalid credentials");
       } else {
@@ -53,7 +53,7 @@ authRouter.post("/logout", (req, res) => {
     res.cookie("token", null, { expires: new Date(Date.now()) });
     // res.clearCookie("token");
 
-    res.send("Logout done");
+    res.send({ message: "Logout done" });
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
