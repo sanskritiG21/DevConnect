@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { JWT_PASS } = require("../config/envConfig");
 
 const userAuth = async (req, res, next) => {
   try {
@@ -9,7 +10,7 @@ const userAuth = async (req, res, next) => {
       throw new Error("Token is not valid");
     }
 
-    const { id } = await jwt.verify(token, "jwtKaPassword123");
+    const { id } = await jwt.verify(token, JWT_PASS);
 
     const user = await User.findById(id);
     if (!user) {
